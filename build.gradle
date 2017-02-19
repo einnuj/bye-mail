@@ -22,9 +22,11 @@ dependencies {
     // The production code uses Guava
     compile 'com.google.guava:guava:20.0'
 
+    // Google API Client for OAuth
     compile 'com.google.api-client:google-api-client:1.22.0'
-    compile 'com.google.oauth-client:google-oauth-client-jetty:1.22.0'
-    compile 'com.google.apis:google-api-services-gmail:v1-rev59-1.22.0'
+    
+    // GSon
+    compile 'com.google.code.gson:gson:2.8.0'
 
     // Use JUnit test framework
     testCompile 'junit:junit:4.12'
