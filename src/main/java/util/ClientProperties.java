@@ -1,9 +1,13 @@
 package util;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 
 /**
  * A Singleton Object representing our Google Client JSON properties.
@@ -13,12 +17,8 @@ import java.io.FileNotFoundException;
 public class ClientProperties {
     private static ClientProperties ourInstance = null;
 
-    public static ClientProperties getInstance() {
-        return (ourInstance != null) ? ourInstance : getProperties();
-    }
-
     // File Path
-    private static String filePath = "~/res/properties.json";
+    private static String filePath = "./res/properties.json";
 
     // JSON Variables
     private static String clientId;
@@ -28,23 +28,33 @@ public class ClientProperties {
 
     private static ClientProperties getProperties() {
         try {
-            File propertiesFile = new File(filePath);
 
-            if (propertiesFile == null) {
-                throw new FileNotFoundException();
-            }
+            JsonParser parser = new JsonParser();
+            JsonObject jsonProperties = parser.parse(new BufferedReader(new FileReader(filePath))).getAsJsonObject();
 
-            Gson gson = new Gson();
-            String json = gson.toJson(propertiesFile);
-            ourInstance = gson.fromJson(json, ClientProperties.class);
+            clientId = jsonProperties.get("clientId").getAsString();
+            clientSecret = jsonProperties.get("clientSecret").getAsString();
+
+            ourInstance = new ClientProperties();
 
             return ourInstance;
         }
         catch (FileNotFoundException fileNotFoundException) {
             System.out.println(fileNotFoundException);
-            System.exit(-1);
         }
 
         return null;
+    }
+
+    public static ClientProperties getInstance() {
+        return (ourInstance != null) ? ourInstance : getProperties();
+    }
+
+    public static String getClientId() {
+        return clientId;
+    }
+
+    public static String getClientSecret() {
+        return clientSecret;
     }
 }
